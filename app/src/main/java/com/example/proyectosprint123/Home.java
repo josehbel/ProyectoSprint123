@@ -1,36 +1,44 @@
 package com.example.proyectosprint123;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.proyectosprint123.DB.DBFirebase;
+import com.example.proyectosprint123.Entidades.Producto;
+
 public class Home extends AppCompatActivity {
-    private Button btnSum;
-    private EditText editNum1, editNum2, editSum;
+    private Button btnForm;
+    private EditText editName, editDescription, editPrice;
+    private DBFirebase dbFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        btnSum = (Button) findViewById(R.id.btnSum);
-        editNum1  = (EditText) findViewById(R.id.editNum1);
-        editNum2  = (EditText) findViewById(R.id.editNum2);
-        editSum =  (EditText) findViewById(R.id.editSum);
+        btnForm = (Button) findViewById(R.id.btnForm);
+        editName  = (EditText) findViewById(R.id.editName);
+        editDescription  = (EditText) findViewById(R.id.editDescription);
+        editPrice =  (EditText) findViewById(R.id.editPrice);
+        dbFirebase = new DBFirebase();
 
-        btnSum.setOnClickListener(new View.OnClickListener() {
+        btnForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Obtengo los datos de las cajitas con getText() y se convierte en enteros
-                int num1 = Integer.parseInt(editNum1.getText().toString().trim());
-                int num2 = Integer.parseInt(editNum2.getText().toString().trim());
-                // se suma los dos enteros
-                int suma = num1 + num2;
-                //Insertar el resultado de la suma en la caja con setText()
-                //se convierte de Entero a Texto con String.valueOf()
-                editSum.setText(String.valueOf(suma));
+                Producto producto = new Producto (
+                        editName.getText().toString(),
+                        editDescription.getText().toString(),
+                        Integer.parseInt(editPrice.getText().toString()),
+                        R.drawable.deporte
+                );
+                dbFirebase.insertData(producto);
+                Intent intent = new Intent(getApplicationContext(), Catalogo.class);
+                startActivity(intent);
             }
         });
     }
